@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Jason英语">
+    
+    <title>My English Sentence Coach v4.4</title>
+    
+    <style>
+        :root {
+            --primary: #007AFF;
+            --bg: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #8E8E93;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            color: var(--text-main);
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px; 
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) 15px 100px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            padding: 20px 0 10px;
+            z-index: 100;
+            text-align: center;
+        }
+
+        h2 { margin: 0; font-size: 24px; font-weight: 700; color: var(--primary); }
+        
+        /* 副标题样式 */
+        .subtitle { font-size: 12px; color: var(--text-sub); margin-top: 4px; font-style: italic; }
+
+        .input-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            border: 1px solid #E5E5EA;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #F9F9F9;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #C7C7CC;
+            background: white;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .slider-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-main:active { opacity: 0.7; }
+
+        .sync-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            background: #E5E5EA;
+            color: #3A3A3C;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            flex: 1;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .sentence-item {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+        }
+
+        .sentence-text {
+            font-size: 19px;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #F2F2F7;
+        }
+
+        .btn-play-mini {
+            background: #E1F0FF;
+            color: var(--primary);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-del-mini {
+            color: #FF3B30;
+            font-size: 13px;
+            border: none;
+            background: none;
+            font-weight: 500;
+        }
+
+        #empty-tip { text-align: center; color: var(--text-sub); margin-top: 40px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h2>Personal Sentence Coach</h2>
+        <div class="subtitle">Collect, listen, and speak your best English sentences.</div>
+    </div>
+
+    <div class="input-card">
+        <textarea id="sentenceInput" placeholder="粘贴一句你今天学到、想反复练的英文句子..."></textarea>
+        
+        <div class="control-row">
+            <div class="voice-selector">
+                <select id="voiceSelect"><option value="">正在初始化外教...</option></select>
+            </div>
+            <div class="slider-box">
+                <span>语速控制: <b id="rateDisplay">0.9</b></span>
+                <input type="range" id="rateRange" min="0.4" max="1.2" step="0.1" value="0.9" style="width: 60%;">
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="addSentence()">保存到我的句库</button>
+        
+        <div class="sync-group">
+            <button class="btn-secondary" onclick="exportData()">📤 导出备份</button>
+            <button class="btn-secondary" onclick="importData()">📥 导入同步</button>
+        </div>
+    </div>
+
+    <div id="sentenceList"></div>
+    <div id="empty-tip">还没有存入句子？快去粘贴今天学的金句吧！</div>
+</div>
+
+<script>
+    let sentences = JSON.parse(localStorage.getItem('jason_eng_db_v42')) || [];
+    let voices = [];
+
+    function initVoices() {
+        const allVoices = window.speechSynthesis.getVoices();
+        if (allVoices.length === 0) {
+            setTimeout(initVoices, 100);
+            return;
+        }
+        
+        voices = allVoices.filter(v => v.lang.includes('en'));
+        const vSel = document.getElementById('voiceSelect');
+        const lastSelected = vSel.value;
+
+        vSel.innerHTML = voices.map(v => 
+            `<option value="${v.name}" ${v.name === lastSelected ? 'selected' : ''}>${v.name}</option>`
+        ).join('');
+        
+        if (voices.length > 0 && !vSel.value) {
+            const bestVoice = voices.find(v => v.name.includes('Natural')) || voices[0];
+            vSel.value = bestVoice.name;
+        }
+    }
+
+    window.speechSynthesis.onvoiceschanged = initVoices;
+    initVoices();
+
+    function render() {
+        const listDiv = document.getElementById('sentenceList');
+        const tip = document.getElementById('empty-tip');
+        
+        if (sentences.length === 0) {
+            tip.style.display = 'block';
+            listDiv.innerHTML = '';
+            return;
+        }
+        
+        tip.style.display = 'none';
+        listDiv.innerHTML = sentences.map((s, i) => `
+            <div class="sentence-item">
+                <div class="sentence-text" onclick="speak('${s.replace(/'/g, "\\'")}')">${s}</div>
+                <div class="item-footer">
+                    <button class="btn-del-mini" onclick="remove(${i})">删除</button>
+                    <button class="btn-play-mini" onclick="speak('${s.replace(/'/g, "\\'")}')">🔊 播放</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addSentence() {
+        const input = document.getElementById('sentenceInput');
+        const text = input.value.trim();
+        if (!text) return;
+        
+        sentences.unshift(text);
+        updateStorage();
+        input.value = '';
+        render();
+    }
+
+    function speak(text) {
+        window.speechSynthesis.cancel();
+        
+        setTimeout(() => {
+            const msg = new SpeechSynthesisUtterance(text);
+            const selectedName = document.getElementById('voiceSelect').value;
+            const voiceObj = window.speechSynthesis.getVoices().find(v => v.name === selectedName);
+            if (voiceObj) msg.voice = voiceObj;
+            msg.rate = document.getElementById('rateRange').value;
+            window.speechSynthesis.speak(msg);
+        }, 50);
+    }
+
+    function remove(i) {
+        if (confirm('确定删除吗？')) {
+            sentences.splice(i, 1);
+            updateStorage();
+            render();
+        }
+    }
+
+    function updateStorage() {
+        localStorage.setItem('jason_eng_db_v42', JSON.stringify(sentences));
+    }
+
+    function exportData() {
+        const data = JSON.stringify(sentences);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `jason_backup_${new Date().toLocaleDateString()}.json`;
+        a.click();
+    }
+
+    function importData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const imported = JSON.parse(reader.result);
+                    if (Array.isArray(imported)) {
+                        sentences = [...imported, ...sentences];
+                        sentences = [...new Set(sentences)];
+                        updateStorage();
+                        render();
+                        alert('同步成功！已合并现有金句。');
+                    }
+                } catch (err) { alert('文件格式不正确'); }
+            };
+            reader.readAsText(e.target.files[0]);
+        };
+        input.click();
+    }
+
+    document.getElementById('rateRange').oninput = e => {
+        document.getElementById('rateDisplay').innerText = e.target.value;
+    };
+
+    render();
+</script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Jason英语">
     
-    <title>My English Sentence Coach v4.4</title>
+    <title>My English Sentence Coach v4.5</title>
     
     <style>
         :root {
@@ -191,7 +191,7 @@
     <div class="header">
         <h2>Personal Sentence Coach</h2>
         <div class="subtitle">Collect, listen, and speak your best English sentences.</div>
-        <div class="browser-tip">💡 建议使用 Edge 浏览器以获得最佳语音效果</div>
+        <div class="browser-tip">💡 推荐使用 Edge / Chrome / Safari 浏览器</div>
     </div>
 
     <div class="input-card">
@@ -220,10 +220,19 @@
 </div>
 
 <script>
-    var ua = navigator.userAgent.toLowerCase();
-if(ua.match(/MicroMessenger/i)=="micromessenger" || ua.indexOf('xiaohongshu') > -1) {
-    alert("⚠️ 请点击右上角 '...' 选择 '在浏览器打开' \n否则无法听到发音哦！");
-}
+    // --- 新增：检测微信和小红书环境 ---
+    (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        // 关键词检测：MicroMessenger 是微信，xiaohongshu 是小红书
+        if(ua.indexOf('micromessenger') !== -1 || ua.indexOf('xiaohongshu') !== -1) {
+            // 延时一点点弹出，确保页面加载背景
+            setTimeout(function() {
+                alert("⚠️ 提示：\n\n小红书/微信内置浏览器可能无法发音。\n\n请点击右上角 [...] \n选择【在浏览器打开】以获得最佳体验！");
+            }, 500);
+        }
+    })();
+    // ------------------------------------
+
     let sentences = JSON.parse(localStorage.getItem('jason_eng_db_v42')) || [];
     let voices = [];
 
@@ -243,6 +252,7 @@ if(ua.match(/MicroMessenger/i)=="micromessenger" || ua.indexOf('xiaohongshu') > 
         ).join('');
         
         if (voices.length > 0 && !vSel.value) {
+            // 优先选择包含 Natural 的高质量语音，其次选第一个
             const bestVoice = voices.find(v => v.name.includes('Natural')) || voices[0];
             vSel.value = bestVoice.name;
         }
@@ -330,6 +340,7 @@ if(ua.match(/MicroMessenger/i)=="micromessenger" || ua.indexOf('xiaohongshu') > 
                     const imported = JSON.parse(reader.result);
                     if (Array.isArray(imported)) {
                         sentences = [...imported, ...sentences];
+                        // 简单去重
                         sentences = [...new Set(sentences)];
                         updateStorage();
                         render();
@@ -351,4 +362,3 @@ if(ua.match(/MicroMessenger/i)=="micromessenger" || ua.indexOf('xiaohongshu') > 
 
 </body>
 </html>
-

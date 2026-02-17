@@ -9,19 +9,16 @@
     
     <title>English Card ✨</title>
     
-    <!-- 引入更加圆润的英文字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* 小红书风格：奶油底色 + 渐变主色 */
             --bg-color: #F7F9FC;
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --card-bg: #FFFFFF;
             --text-main: #2D3748;
             --text-light: #718096;
             --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
             --radius-box: 24px;
             --radius-btn: 16px;
         }
@@ -39,14 +36,13 @@
 
         .app-container {
             width: 100%;
-            max-width: 480px; /* 稍微窄一点，更有手机感 */
+            max-width: 480px;
             padding: calc(env(safe-area-inset-top) + 20px) 20px 100px;
             box-sizing: border-box;
         }
 
-        /* 顶部标题区 */
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-align: left;
             padding: 0 5px;
         }
@@ -58,7 +54,6 @@
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
         }
 
         .subtitle {
@@ -66,17 +61,26 @@
             color: var(--text-light);
             margin-top: 6px;
             font-weight: 500;
-            opacity: 0.8;
         }
 
-        /* 输入区域卡片 */
+        .browser-tip {
+            display: inline-block;
+            margin-top: 10px;
+            background: #FFFAF0;
+            color: #DD6B20;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 1px solid #FEEBC8;
+        }
+
         .input-card {
             background: var(--card-bg);
             border-radius: var(--radius-box);
             padding: 24px;
             margin-bottom: 30px;
             box-shadow: var(--shadow-soft);
-            transition: transform 0.2s ease;
             border: 1px solid rgba(255,255,255,0.8);
         }
 
@@ -95,11 +99,9 @@
             resize: none;
             font-family: inherit;
             margin-bottom: 20px;
-            transition: background 0.3s;
         }
         
         textarea:focus { background: #EDF2F7; }
-        textarea::placeholder { color: #CBD5E0; }
 
         .control-panel {
             display: flex;
@@ -107,10 +109,8 @@
             gap: 15px;
         }
 
-        /* 自定义下拉框样式 */
-        .select-wrapper {
-            position: relative;
-        }
+        .select-wrapper { position: relative; }
+        
         select {
             appearance: none;
             -webkit-appearance: none;
@@ -119,10 +119,14 @@
             border-radius: 12px;
             border: 1px solid #E2E8F0;
             background: white;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-main);
             font-weight: 600;
+            text-overflow: ellipsis; 
+            white-space: nowrap;
+            overflow: hidden;
         }
+        
         .select-wrapper::after {
             content: '⌄';
             position: absolute;
@@ -148,10 +152,9 @@
 
         input[type=range] {
             width: 60%;
-            accent-color: #764ba2; /* 只有新浏览器支持，但也够用了 */
+            accent-color: #764ba2;
         }
 
-        /* 主按钮：渐变色 */
         .btn-main {
             background: var(--primary-gradient);
             color: white;
@@ -164,12 +167,9 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
             margin-top: 10px;
-            transform: scale(1);
-            transition: transform 0.1s;
         }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main:active { opacity: 0.9; transform: scale(0.98); }
 
-        /* 功能按钮区 */
         .sync-row {
             display: flex;
             justify-content: center;
@@ -188,16 +188,12 @@
             padding: 5px;
         }
 
-        /* 列表区域 */
         .list-label {
             font-size: 18px;
             font-weight: 800;
             margin-bottom: 15px;
             padding-left: 5px;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .sentence-card {
@@ -211,7 +207,6 @@
             border: 1px solid rgba(0,0,0,0.02);
         }
         
-        /* 装饰用的左侧条条 */
         .sentence-card::before {
             content: '';
             position: absolute;
@@ -252,25 +247,16 @@
             align-items: center;
             gap: 6px;
             cursor: pointer;
-            transition: all 0.2s;
         }
         
         .btn-play { color: #667eea; background: #EEF2FF; }
-        .btn-play:active { background: #667eea; color: white; }
-        
         .btn-del { color: #FC8181; background: #FFF5F5; }
-        .btn-del:active { background: #FC8181; color: white; }
 
         #empty-state {
             text-align: center;
             color: #A0AEC0;
             margin-top: 60px;
             padding: 40px;
-        }
-        #empty-state img {
-            width: 80px;
-            margin-bottom: 15px;
-            opacity: 0.5;
         }
     </style>
 </head>
@@ -280,6 +266,7 @@
     <div class="header">
         <h2>English Coach</h2>
         <div class="subtitle">Collect. Listen. Master.</div>
+        <div class="browser-tip">💡 推荐使用 Edge / Chrome / Safari 浏览器</div>
     </div>
 
     <div class="input-card">
@@ -287,7 +274,7 @@
         
         <div class="control-panel">
             <div class="select-wrapper">
-                <select id="voiceSelect"><option value="">🎧 正在寻找外教...</option></select>
+                <select id="voiceSelect"><option value="">🎧 正在初始化外教...</option></select>
             </div>
             
             <div class="slider-row">
@@ -299,8 +286,8 @@
         </div>
 
         <div class="sync-row">
-            <button class="text-btn" onclick="exportData()">📤 备份数据</button>
-            <button class="text-btn" onclick="importData()">📥 恢复数据</button>
+            <button class="text-btn" onclick="exportData()">📤 备份 (TXT)</button>
+            <button class="text-btn" onclick="importData()">📥 导入 (TXT/JSON)</button>
         </div>
     </div>
 
@@ -314,7 +301,6 @@
 </div>
 
 <script>
-    // --- 微信/小红书环境检测 ---
     (function() {
         var ua = navigator.userAgent.toLowerCase();
         if(ua.indexOf('micromessenger') !== -1 || ua.indexOf('xiaohongshu') !== -1) {
@@ -324,7 +310,6 @@
         }
     })();
 
-    // 核心逻辑保持不变
     let sentences = JSON.parse(localStorage.getItem('jason_eng_db_v42')) || [];
     let voices = [];
 
@@ -338,11 +323,10 @@
         const vSel = document.getElementById('voiceSelect');
         const lastSelected = vSel.value;
         
-        // 简化显示名称，去掉繁琐的描述
         vSel.innerHTML = voices.map(v => {
-            let label = v.name.replace(/Microsoft |Google |English|United States/g, '').trim();
-            label = label.substring(0, 15); // 名字太长截断
-            return `<option value="${v.name}" ${v.name === lastSelected ? 'selected' : ''}>🎙️ ${label}</option>`
+            let label = v.name.replace(/^Microsoft |^Google /g, '');
+            const icon = label.includes('Online') || label.includes('Natural') ? '🌟' : '🎙️';
+            return `<option value="${v.name}" ${v.name === lastSelected ? 'selected' : ''}>${icon} ${label}</option>`
         }).join('');
         
         if (voices.length > 0 && !vSel.value) {
@@ -388,7 +372,6 @@
 
     function speak(text) {
         window.speechSynthesis.cancel();
-        // 增加按钮点击反馈
         if(navigator.vibrate) navigator.vibrate(20); 
 
         setTimeout(() => {
@@ -413,33 +396,57 @@
         localStorage.setItem('jason_eng_db_v42', JSON.stringify(sentences));
     }
 
+    // === 修改点1：导出为 TXT 文件 ===
     function exportData() {
-        const data = JSON.stringify(sentences);
-        const blob = new Blob([data], {type: 'application/json'});
+        if(sentences.length === 0) {
+            alert("还没有句子可以导出哦~");
+            return;
+        }
+        // 把数组变成纯文本，一行一句
+        const textContent = sentences.join('\n');
+        const blob = new Blob([textContent], {type: 'text/plain'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
+        // 名字改为 .txt
+        a.download = `english_backup_${new Date().toISOString().slice(0,10)}.txt`;
         a.click();
     }
 
+    // === 修改点2：智能导入 (支持 TXT 和 JSON) ===
     function importData() {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.json';
+        // 允许选 TXT 或 JSON
+        input.accept = '.txt, .json';
         input.onchange = e => {
             const reader = new FileReader();
             reader.onload = () => {
+                const content = reader.result;
+                let newSentences = [];
+                
                 try {
-                    const imported = JSON.parse(reader.result);
-                    if (Array.isArray(imported)) {
-                        sentences = [...imported, ...sentences];
-                        sentences = [...new Set(sentences)];
-                        updateStorage();
-                        render();
-                        alert('✨ 数据同步成功！');
-                    }
-                } catch (err) { alert('文件格式不对哦'); }
+                    // 1. 尝试当做 JSON 解析 (兼容旧备份)
+                    newSentences = JSON.parse(content);
+                    if (!Array.isArray(newSentences)) throw new Error('Not array');
+                } catch (err) {
+                    // 2. 如果 JSON 解析失败，就当做 TXT 处理 (一行一句)
+                    // split('\n') 按换行分割
+                    // filter 过滤掉空行
+                    newSentences = content.split('\n')
+                        .map(s => s.trim())
+                        .filter(s => s.length > 0);
+                }
+
+                if (newSentences.length > 0) {
+                    sentences = [...newSentences, ...sentences];
+                    sentences = [...new Set(sentences)]; // 去重
+                    updateStorage();
+                    render();
+                    alert(`✨ 成功导入 ${newSentences.length} 条句子！`);
+                } else {
+                    alert('文件里好像没有内容哦');
+                }
             };
             reader.readAsText(e.target.files[0]);
         };

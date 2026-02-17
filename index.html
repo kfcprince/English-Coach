@@ -220,6 +220,10 @@
 </div>
 
 <script>
+    var ua = navigator.userAgent.toLowerCase();
+if(ua.match(/MicroMessenger/i)=="micromessenger" || ua.indexOf('xiaohongshu') > -1) {
+    alert("⚠️ 请点击右上角 '...' 选择 '在浏览器打开' \n否则无法听到发音哦！");
+}
     let sentences = JSON.parse(localStorage.getItem('jason_eng_db_v42')) || [];
     let voices = [];
 
@@ -347,3 +351,4 @@
 
 </body>
 </html>
+
